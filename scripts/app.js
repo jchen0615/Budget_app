@@ -94,7 +94,7 @@ app.post('/summary/:year/:month', (req, res) => {
     
 });
 
-//post request to delete item by ID from MySQL
+//post request to delete item by ID
 app.post('/summary/:year/:month/delete', (req, res) =>{
     db.deleteData(req.params.year, req.params.month, req.body.ID)
         .then(function(result){
