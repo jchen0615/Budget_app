@@ -4,10 +4,7 @@ var $ = require("jquery");
 
 
 var app = express();
-
 const port = 3001;
-
-const monthName = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 app.listen(port, () => {
     console.log(`Server is up on ${port}`);
@@ -36,7 +33,7 @@ var initialization = function(){
 };
 */
 
-
+//get request to render the month.ejs file
 app.get('/summary/:year/:month', (req, res)=>{
     res.render('month',{Month:req.params.month, Year:req.params.year});
 })

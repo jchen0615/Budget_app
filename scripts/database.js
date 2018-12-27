@@ -16,6 +16,7 @@ con.connect(function(err) {
 });
 
 
+//If table does not exist, create table for that month/year.
 function checkTable(year, month){
   
     return new Promise(function(resolve, reject){
@@ -31,7 +32,6 @@ function checkTable(year, month){
 
 // Insert expense into collection "monthYear" of MySql
 function createData(year, month, type, value, description) {
-  // TODO
     return new Promise(function(resolve, reject){
         var q =  "INSERT INTO "+month+year+" (type, value, description) VALUES ( '" + type + "'," + value + ", '" + description + "');";
        
@@ -43,6 +43,8 @@ function createData(year, month, type, value, description) {
  
 }
 
+
+//Get the row that was entered the latest
 function getLatestData(year, month){
     
     return new Promise(function(resolve, reject){
@@ -56,15 +58,15 @@ function getLatestData(year, month){
     })
 }
 
-//Get data 
+//Get everything for that specific month/yearh table from MySql.
 function getData(year, month) {
     
     return new Promise(function(resolve, reject){
       
         var q = "SELECT * FROM " +month+year + ";";
-    
         con.query(q, function(error, result){
             if(error) throw error;
+            //For each element in result, return a data object for formatting purpose
             result.map(function(element){
                 return (new data(element.ID, element.type, element.value, element.description));
             });  
@@ -73,12 +75,13 @@ function getData(year, month) {
     })
 }
 
+//Get only the expenses from month/year table
 function getExpense(year, month){
     
     return new Promise(function(resolve, reject){
       
         var q = "SELECT * FROM " +month+year + " WHERE type = '-';";
-    
+        //For each element in result, return a data object for formatting purpose
         con.query(q, function(error, result){
             if(error) throw error;
             result.map(function(element){
@@ -89,6 +92,7 @@ function getExpense(year, month){
     })
 }
 
+//Delete item by ID
 function deleteData(year, month, ID){
 
     return new Promise(function(resolve, reject){

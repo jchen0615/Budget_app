@@ -123,17 +123,19 @@
         <script src="https://www.promisejs.org/polyfills/promise-6.1.0.js"></script>
         <script>
         
-            var DOMString = {
-                budget: $(".budget__value"),
-                income: $(".budget__income--value"),
-                expense: $(".budget__expenses--value"),
-                percentage: $(".budget__expenses--percentage"),
-                type: $(".add__type"),
-                description: $(".add__description"),
-                value: $(".add__value")
-            };
+                //an object the stores frequently used html elements
+                var DOMString = {
+                    budget: $(".budget__value"),
+                    income: $(".budget__income--value"),
+                    expense: $(".budget__expenses--value"),
+                    percentage: $(".budget__expenses--percentage"),
+                    type: $(".add__type"),
+                    description: $(".add__description"),
+                    value: $(".add__value")
+                };
             
             
+                //gets month income, expense, budget and expense to income percentage for specified month/year
                 function get(month, year){
                     $.ajax({
                         url: "http://localhost:3000/summary/"+year+"/"+month,
@@ -153,6 +155,7 @@
                     });
                 }
             
+                //gets a detailed list of income and expense for specified month/year
                 function getDetail(year, month){
                         $.ajax({
                         url: "http://localhost:3000/summary/"+year+"/"+month+"/data",
@@ -167,6 +170,7 @@
                     });
                 }
             
+                //adds new data to MySQL
                 function addData(month, year){
                     var type=DOMString.type.text();
                     var description = DOMString.description.val();
@@ -183,6 +187,7 @@
                                 else if(type==='-')
                                     insertExpense(data.ID, description, value);
                                 
+                                //Resets the input boxes
                                 DOMString.description.val('');
                                 DOMString.type.text('+');
                                 DOMString.value.val('');
@@ -190,6 +195,7 @@
                     });
                 }
             
+                //sets event listeners
                 function setListener(month, year){
                     
                     $(".add__btn").on('click', function(event){
@@ -200,17 +206,20 @@
                     DOMString.value.on('keypress', function(event){
                         if(event.keyCode === 13){
                             addData(month, year);
+                            
+                            //sets focus back to description input box
                             DOMString.description.focus();
                         }
                     })
                     
                     DOMString.type.on('click', function(event){
-                        //$('.add__type').text('-');
+                        //toggles type box display on click
                         if($(this).text()==='+')
                             $(this).text('-');
                         else
                             $(this).text('+');
                         
+                        //toggles the 'red-focus' and 'red' class on elements
                         DOMString.type.toggleClass('red-focus');
                         DOMString.description.toggleClass('red-focus');
                         DOMString.value.toggleClass('red-focus');
@@ -218,12 +227,14 @@
                         DOMString.description.focus();
                     })
                     
+                    //on click, deletes item
                     $(".container").on('click','.item__delete--btn', function(event){
                         //delete data on display and from database
                         var value;
                         var element = $(event.target).closest('.item');
                         var ID = element.attr('id').split('-')[1];
                         var type = element.attr('id').split('-')[0];
+                        
                         if(type==='income')
                             value = deformatNum(element.text().split(' ')[1]);
                         else{
@@ -243,6 +254,7 @@
                     
                 }
             
+                //deletes item from UI and updates the month income, expense, budget and expense to income ratio.
                 function deleteItemVisual(element, ID, type, value){
                     element.remove();
                     if(type === 'income'){
@@ -258,6 +270,7 @@
                     updateListPer(getYear(), getMonth());
                 }
             
+                //adds item to UI 
                 function insertDisplay(type, id, description, value){
                     return new Promise(function(resolve, reject){
                         var newData;
@@ -282,6 +295,7 @@
                     })                    
                 }
             
+                //inserts new income to UI and updates the necessary info
                 function insertIncome(id, description, value){
                     //updates visual
                     insertDisplay('+', id, description, value).
@@ -297,6 +311,7 @@
                     updateExpensePer();
                 }
             
+                //inserts new expense to UI and updates the necessary info
                 function insertExpense(id, description, value){
                                     
                     insertDisplay('-', id, description, value);
@@ -309,6 +324,7 @@
                     updateExpensePer();
                 }
             
+                //updates value displayed on UI
                 function updateValue(element, type, value){
                     
                     var hold;
@@ -322,23 +338,28 @@
                     }
                 }
             
+                //updates the month expense to income ratio
                 function updateExpensePer(){
                     var hold = Math.round(deformatNum(DOMString.expense.text())/deformatNum(DOMString.income.text())*100);
                     DOMString.percentage.text(hold+"%");
                 }
             
+                //get the year of summary page the UI is on
                 function getYear(){
                     return $(".budget__title--month").text().split(" ")[21];
                 }
             
+                //get the month of summary page the UI is on
                 function getMonth(){
                     return $(".budget__title--month").text().split(" ")[20];
                 }
             
+                //formats the number so its divided by , every 3 figures
                 function formatNum(value){
                         return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                 }
             
+                //deformats the number so there is no , in between
                 function deformatNum(value){
                     var formatedNum='';
                     var hold = value.split(',');
@@ -349,6 +370,7 @@
                     return parseInt(formatedNum);
                 }
             
+                //updates the expense to income ratio for individual expense item
                 function updateListPer(year, month){
                      $.ajax({
                         url: "http://localhost:3000/summary/"+year+"/"+month+"/expenses",

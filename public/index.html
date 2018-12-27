@@ -159,7 +159,7 @@
                 })
             }
             
-            
+            //Sets href attribute for all 'month' buttons
             function setLink(year){
                  $('#January').attr("href","http://localhost:3001/summary/"+year+"/January");
                 $('#February').attr("href","http://localhost:3001/summary/"+year+"/February");
@@ -175,7 +175,7 @@
                 $('#December').attr("href","http://localhost:3001/summary/"+year+"/December");
             }
            
-            
+            //Gets income, expense and budget for month/year
             function get(month, year){
                 return new Promise(function(resolve, reject){
                     $.ajax({
@@ -193,6 +193,7 @@
                 })
             }
             
+            //Formats the number so its divided by , every 3 figures.
             function formatNum(value){
                 return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
@@ -200,6 +201,8 @@
             function initial(year){
                 setLink(year);
                 $('.year').text(year);
+                
+                //Get data for every month of the specified year
                 get('January',year).then(function(){
                     return get('February', year);
                 }).then(function(){
