@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,600" rel="stylesheet" type="text/css">
+        <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="/monthStyle.css">
+        <title>Budgety</title>
+    </head>
+    <body>
+        
+        <div class="top">
+            <a class = "arrow prev" id = "prev" href="http://localhost:3001">&#8249;</a>
+            <div class="budget">
+                <div class="budget__title">
+                    Available Budget in <span class="budget__title--month">
+                    <%=Month%> <%=Year%></span>:
+                </div>
+                
+                <div class="budget__value">+ 2,345.64</div>
+                
+                <div class="budget__income clearfix">
+                    <div class="budget__income--text">Income</div>
+                    <div class="right">
+                        <div class="budget__income--value">+ 4,300.00</div>
+                        <div class="budget__income--percentage">&nbsp;</div>
+                    </div>
+                </div>
+                
+                <div class="budget__expenses clearfix">
+                    <div class="budget__expenses--text">Expenses</div>
+                    <div class="right clearfix">
+                        <div class="budget__expenses--value">- 1,954.36</div>
+                        <div class="budget__expenses--percentage">45%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="bottom">
+            <div class="add">
+                <div class="add__container">
+                    <button class="add__type">+</button>
+                    <input type="text" class="add__description" placeholder="Add description">
+                    <input type="number" class="add__value" placeholder="Value">
+                    <button class="add__btn"><i class="ion-ios-checkmark-outline"></i></button>
+                </div>
+            </div>
+            
+            <div class="container clearfix">
+                <div class="income">
+                    <h2 class="icome__title">Income</h2>
+                    
+                    <div class="income__list">
+                       
+                        <!--
+                        <div class="item clearfix" id="income-0">
+                            <div class="item__description">Salary</div>
+                            <div class="right clearfix">
+                                <div class="item__value">+ 2,100.00</div>
+                                <div class="item__delete">
+                                    <button class="item__delete--btn">
+                                        <i class="ion-ios-close-outline"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="item clearfix" id="income-1">
+                            <div class="item__description">Sold car</div>
+                            <div class="right clearfix">
+                                <div class="item__value">+ 1,500.00</div>
+                                <div class="item__delete">
+                                    <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        -->
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <div class="expenses">
+                    <h2 class="expenses__title">Expenses</h2>
+                    
+                    <div class="expenses__list">
+                       
+                        <!--
+                        <div class="item clearfix" id="expense-0">
+                            <div class="item__description">Apartment rent</div>
+                            <div class="right clearfix">
+                                <div class="item__value">- 900.00</div>
+                                <div class="item__percentage">21%</div>
+                                <div class="item__delete">
+                                    <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="item clearfix" id="expense-1">
+                            <div class="item__description">Grocery shopping</div>
+                            <div class="right clearfix">
+                                <div class="item__value">- 435.28</div>
+                                <div class="item__percentage">10%</div>
+                                <div class="item__delete">
+                                    <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        -->
+                        
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://www.promisejs.org/polyfills/promise-6.1.0.js"></script>
+        <script>
+        
+            var DOMString = {
+                budget: $(".budget__value"),
+                income: $(".budget__income--value"),
+                expense: $(".budget__expenses--value"),
+                percentage: $(".budget__expenses--percentage"),
+                type: $(".add__type"),
+                description: $(".add__description"),
+                value: $(".add__value")
+            };
+            
+            
+                function get(month, year){
+                    $.ajax({
+                        url: "http://localhost:3000/summary/"+year+"/"+month,
+                        type: "get",
+                        data: {year:year, month:month},
+                        dataType: 'json',
+                        success: function(data){
+                            
+                            DOMString.budget.text(formatNum(data.budget));
+                            DOMString.income.text(formatNum(data.income));
+                            DOMString.expense.text(formatNum(data.expense));
+                            
+                            var percentage = Math.round((deformatNum(DOMString.expense.text())/deformatNum(DOMString.income.text()))*100);
+                            
+                            DOMString.percentage.text(percentage+"%");
+                        }
+                    });
+                }
+            
+                function getDetail(year, month){
+                        $.ajax({
+                        url: "http://localhost:3000/summary/"+year+"/"+month+"/data",
+                        type: "get",
+                        data: {year:year, month:month},
+                        dataType: 'json',
+                        success: function(data){ 
+                            data.forEach(function(data){
+                                    insertDisplay(data.type, data.ID, data.description, data.value);
+                            })
+                        }
+                    });
+                }
+            
+                function addData(month, year){
+                    var type=DOMString.type.text();
+                    var description = DOMString.description.val();
+                    var value = parseInt(DOMString.value.val());
+                    
+                    $.ajax({
+                            url: "http://localhost:3000/summary/"+year+"/"+month,
+                            type: "post",
+                            data: {month:month, year:year, type:type, description:description, value:value},
+                            dataType: 'json',
+                            success: function(data){
+                                if(type==='+')
+                                    insertIncome(data.ID, description, value);
+                                else if(type==='-')
+                                    insertExpense(data.ID, description, value);
+                                
+                                DOMString.description.val('');
+                                DOMString.type.text('+');
+                                DOMString.value.val('');
+                            }
+                    });
+                }
+            
+                function setListener(month, year){
+                    
+                    $(".add__btn").on('click', function(event){
+                        addData(month, year);
+                        DOMString.description.focus();
+                    })
+                    
+                    DOMString.value.on('keypress', function(event){
+                        if(event.keyCode === 13){
+                            addData(month, year);
+                            DOMString.description.focus();
+                        }
+                    })
+                    
+                    DOMString.type.on('click', function(event){
+                        //$('.add__type').text('-');
+                        if($(this).text()==='+')
+                            $(this).text('-');
+                        else
+                            $(this).text('+');
+                        
+                        DOMString.type.toggleClass('red-focus');
+                        DOMString.description.toggleClass('red-focus');
+                        DOMString.value.toggleClass('red-focus');
+                        $(".add__btn").toggleClass('red');
+                        DOMString.description.focus();
+                    })
+                    
+                    $(".container").on('click','.item__delete--btn', function(event){
+                        //delete data on display and from database
+                        var value;
+                        var element = $(event.target).closest('.item');
+                        var ID = element.attr('id').split('-')[1];
+                        var type = element.attr('id').split('-')[0];
+                        if(type==='income')
+                            value = deformatNum(element.text().split(' ')[1]);
+                        else{
+                            value = deformatNum(element.find('.item__value').text().split(' ')[1]);
+                        }
+                        
+                        $.ajax({
+                            url: "http://localhost:3000/summary/"+year+"/"+month+"/delete",
+                            type: "post",
+                            data:{ID: ID},
+                            dataType: 'json',
+                            success: function(data){
+                                deleteItemVisual(element, ID, type, value);
+                            }
+                        })
+                    })
+                    
+                }
+            
+                function deleteItemVisual(element, ID, type, value){
+                    element.remove();
+                    if(type === 'income'){
+                        updateValue(DOMString.income, 'sub', value);
+                        updateValue(DOMString.budget, 'sub', value);
+                    }
+                    else if(type === 'expense'){
+                        updateValue(DOMString.expense, 'sub', value);
+                        updateValue(DOMString.budget, 'add', value);
+                    }
+                    
+                    updateExpensePer();
+                    updateListPer(getYear(), getMonth());
+                }
+            
+                function insertDisplay(type, id, description, value){
+                    return new Promise(function(resolve, reject){
+                        var newData;
+                        value = formatNum(value);
+                        if(type === '+'){
+                            newData = "<div class='item clearfix' id='income-%id%'><div class='item__description'>%description%</div><div class='right clearfix'><div class='item__value'>+ %value%</div><div class='item__delete'><button class='item__delete--btn'><i class='ion-ios-close-outline'></i></button></div></div></div>";
+                            
+                            //creating string to be placed in HTML
+                            newData = newData.replace('%id%',id).replace('%description%',description).replace("%value%",value);
+                            $('.income__list').append(newData);
+                        }
+                        else if (type === '-'){
+                            newData = "<div class='item clearfix' id='expense-%id%'><div class='item__description'>%description%</div><div class='right clearfix'><div class='item__value'>- %value%</div><div class='item__percentage'>%percentage%</div><div class='item__delete'><button class='item__delete--btn'><i class='ion-ios-close-outline'></i></button></div></div></div>";
+                            
+                            var percent = Math.round(deformatNum(value)/deformatNum(DOMString.income.text())*100);
+                            
+                            //creating string to be placed in HTML
+                            newData = newData.replace('%id%',id).replace('%description%',description).replace("%value%",value).replace('%percentage%',percent+"%");
+                            $('.expenses__list').append(newData);
+                        }  
+                      resolve();  
+                    })                    
+                }
+            
+                function insertIncome(id, description, value){
+                    //updates visual
+                    insertDisplay('+', id, description, value).
+                    then(function(){
+                        updateListPer(getYear(), getMonth());
+                    });
+                    
+                    //updates month income by adding new income value
+                    updateValue(DOMString.income, 'add', value);
+                    //updates month budget value by adding new income value
+                    updateValue(DOMString.budget, 'add', value);
+                    //updates expense percentage
+                    updateExpensePer();
+                }
+            
+                function insertExpense(id, description, value){
+                                    
+                    insertDisplay('-', id, description, value);
+                    
+                    //updates month expense by adding new expense value
+                    updateValue(DOMString.expense, 'add', value);
+                    //updates month budget by subtracting new expense value
+                    updateValue(DOMString.budget, 'sub', value);
+                    //updates expense percentage
+                    updateExpensePer();
+                }
+            
+                function updateValue(element, type, value){
+                    
+                    var hold;
+                    if(type==='add'){
+                        hold = deformatNum(element.text())+value;
+                        element.text(formatNum(hold));
+                    }
+                    else if (type === 'sub'){
+                        hold = deformatNum(element.text())-value;
+                        element.text(formatNum(hold));
+                    }
+                }
+            
+                function updateExpensePer(){
+                    var hold = Math.round(deformatNum(DOMString.expense.text())/deformatNum(DOMString.income.text())*100);
+                    DOMString.percentage.text(hold+"%");
+                }
+            
+                function getYear(){
+                    return $(".budget__title--month").text().split(" ")[21];
+                }
+            
+                function getMonth(){
+                    return $(".budget__title--month").text().split(" ")[20];
+                }
+            
+                function formatNum(value){
+                        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                }
+            
+                function deformatNum(value){
+                    var formatedNum='';
+                    var hold = value.split(',');
+                    
+                    for(var i =0; i<hold.length;i++){
+                        formatedNum = formatedNum.concat(hold[i]);
+                    }
+                    return parseInt(formatedNum);
+                }
+            
+                function updateListPer(year, month){
+                     $.ajax({
+                        url: "http://localhost:3000/summary/"+year+"/"+month+"/expenses",
+                        type: "get",
+                        success: function(data){
+                            data.forEach(function(data){
+                                var hold = Math.round((data.value/deformatNum(DOMString.income.text())*100));
+                                $('#expense-'+data.ID).find('.item__percentage').text(hold+"%");  
+                            })
+                        }
+                     })
+                }
+            
+                $(document).ready(function() {
+                    var month = getMonth();
+                    var year = getYear();
+
+                    get(month, year);
+                    getDetail(year, month);
+                    setListener(month, year);
+                    
+                })
+
+        
+        </script>
+
+    </body>
+</html>

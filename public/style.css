@@ -1,0 +1,92 @@
+html{
+    letter-spacing: 2vh;
+    font-size: 3vh;
+    font-family: 'Open Sans';
+    font-weight: 300;
+    text-rendering: optimizeLegibility;
+    color:#fff;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.top{
+    padding-top: 3vh;
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(natural.jpg);
+    height: 30vh;
+    background-position: center;
+    background-size: cover;
+    text-align: center;
+    position: relative;
+}
+
+.year{
+    font-size: 10vh;
+    font-weight: 100;
+    color: #fff;
+}
+
+.hr{
+    width: 10vh;
+}
+
+.btn:link,
+.btn:visited {
+    margin: 0 10%;
+    display:inline-block;
+    padding: 5% 25%;
+    text-decoration: none;
+    border-radius: 8vh;
+    transition: transform 0.3s;
+    flex: 1;
+    display: flex;
+    text-align: center;
+    letter-spacing: 15%;
+}
+
+.arrow:link,
+.arrow:visited{
+    display:inline-block;
+    font-size: 8vh;
+    color:#fff;
+    text-decoration: none;
+    border:none;
+    vertical-align: middle;
+    transition: transform 0.3s;
+}
+
+.arrow:hover,
+.arrow:active {
+    transform: scale(1.5) perspective(1px);
+    transition: transform 0.3s;
+}
+
+.btn-full:link,
+.btn-full:visited{
+    background-color: #3498db;
+    color: #fff;
+}
+
+.btn-full:hover,
+.btn-full:active{
+    transform: scale(1.2) perspective(1px);
+    background-color: #2ecc71;
+    transition: background-color 0.2s, transform 0.3s;
+}
+
+.data{
+    margin: 5% 0;
+    font-size: 2.5vh;
+    letter-spacing: 0;
+}
+.income-month {
+    color: #489091;
+}
+
+.expense-month {
+    color:#cb5f5f;
+}
+
+.budget-month {
+    color: #434343;
+}
+
