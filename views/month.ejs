@@ -191,6 +191,10 @@
                                 DOMString.description.val('');
                                 DOMString.type.text('+');
                                 DOMString.value.val('');
+                                DOMString.type.toggleClass('red-focus');
+                                DOMString.description.toggleClass('red-focus');
+                                DOMString.value.toggleClass('red-focus');
+                                $(".add__btn").toggleClass('red');
                             }
                     });
                 }

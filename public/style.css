@@ -11,7 +11,7 @@ html{
 
 .top{
     padding-top: 3vh;
-    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(natural.jpg);
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(nature.jpg);
     height: 30vh;
     background-position: center;
     background-size: cover;

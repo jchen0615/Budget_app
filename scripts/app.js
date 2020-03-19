@@ -5,6 +5,7 @@ const app = express();
 const port = 3000;
 const db = require('./database');
 const bodyParser = require('body-parser');
+var cors = require('cors');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -13,12 +14,7 @@ app.use(bodyParser.urlencoded({
 
 app.set('view engine','ejs');
 app.set('views', path.join(__dirname, '../views'));
-
-/*
-const publicPath = path.join(__dirname, '../public');
-app.use(express.static(publicPath));
-app.use(express.static(__dirname));
-*/
+app.use(cors({origin: 'http://localhost:3001'}));
 
 
 app.get('/', (req, res) => {
