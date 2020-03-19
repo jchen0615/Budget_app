@@ -18,7 +18,7 @@ With MySQL installed and set up, we can now start running this web app. This app
 **Detail page**
 - Click on any months to get a detail list of income and expense for that particular month. This will redirect you to a new page. Located on the top of the page, there is a grid that summarizes the information: income, expense, budget, as well as the expense to income ratio. 
 
-Moving down, we have an 'Add Description' input, a 'Value' input and a check button. Located on the left of 'Add Description' input, there is a box that displays '+'. By clicking '+', it will transform to '-' indcating whether its an income or an expense. 
+- Moving down, we have an 'Add Description' input, a 'Value' input and a check button. Located on the left of 'Add Description' input, there is a box that displays '+'. By clicking '+', it will transform to '-' indcating whether its an income or an expense. 
 
-Moving down the page, we have a list of incomes and expenses. Next to individual expenses, there is a percentage indicating its ratio to income. Hovering any income or expense, you will see a 'x' button that allows you to remove it from the list. That is all, thank you for your interest!
+- Moving down the page, we have a list of incomes and expenses. Next to individual expenses, there is a percentage indicating its ratio to income. Hovering any income or expense, you will see a 'x' button that allows you to remove it from the list. That is all, thank you for your interest!
 ![Image description](https://github.com/jchen0615/Budget_app/blob/master/public/img/Detail.PNG)
